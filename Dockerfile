@@ -4,16 +4,19 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the application files to the container
-COPY . /app
+# Copy only the requirements.txt first to leverage Docker cache
+COPY requirements.txt /app/requirements.txt
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update --fix-missing && apt-get install -y \
     build-essential \
     && apt-get clean
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application files
+COPY . /app
 
 # Expose the default Streamlit port
 EXPOSE 8501
