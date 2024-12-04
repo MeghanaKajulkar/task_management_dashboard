@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def add_task(task_name, status, deadline):
     priority = "High" if deadline < datetime.today().date() else "Medium"
