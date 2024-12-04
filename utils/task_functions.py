@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 def add_task(task_name, status, deadline):
     priority = "High" if deadline < datetime.today().date() else "Medium"
@@ -29,10 +30,7 @@ def show_tasks():
         st.write('<div class="section-heading">Current Tasks</div>', unsafe_allow_html=True)
         st.dataframe(task_df, width=1200)
 
-        with st.expander("Mark Task as Completed"):
-            task_to_complete = st.selectbox("Select a task", task_df['task_name'])
-            if st.button("Mark as Completed"):
-                mark_as_completed(task_to_complete)
+    
     else:
         st.write("No tasks added yet.")
 
