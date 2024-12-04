@@ -1,7 +1,7 @@
 import pytest
 import streamlit as st
 from datetime import datetime
-from task_functions import add_task
+from utils.task_functions import add_task
 
 @pytest.fixture(autouse=True)
 def mock_session_state():
