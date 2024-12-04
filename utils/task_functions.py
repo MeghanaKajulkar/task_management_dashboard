@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from datetime import datetime
 
 def add_task(task_name, status, deadline):
@@ -58,3 +56,31 @@ def show_task_progress():
         st.pyplot(plt)
     else:
         st.write("No tasks to display progress.")
+
+# Function to edit tasks (name, status, deadline, etc.)
+def edit_task(task_name, new_name, new_status, new_deadline):
+    for task in st.session_state.tasks:
+        if task['task_name'] == task_name:
+            task['task_name'] = new_name
+            task['status'] = new_status
+            task['deadline'] = new_deadline
+            st.success(f'Task "{task_name}" has been updated to "{new_name}".')
+
+# Function to manage tasks (mark as completed or edit)
+def manage_task():
+    st.write('<div class="section-heading">Manage Task</div>', unsafe_allow_html=True)
+    
+    # Mark task as completed
+    with st.expander("Mark Task as Completed"):
+        task_to_complete = st.selectbox("Select a task", [task['task_name'] for task in st.session_state.tasks])
+        if st.button("Mark as Completed"):
+            mark_as_completed(task_to_complete)
+    
+    # Edit Task
+    with st.expander("Edit Task"):
+        task_to_edit = st.selectbox("Select a task to edit", [task['task_name'] for task in st.session_state.tasks])
+        new_task_name = st.text_input("New Task Name", task_to_edit)
+        new_status = st.selectbox("New Status", ["Not Started", "In Progress", "Completed"])
+        new_deadline = st.date_input("New Deadline", min_value=datetime.today().date())
+        if st.button("Update Task"):
+            edit_task(task_to_edit, new_task_name, new_status, new_deadline)
