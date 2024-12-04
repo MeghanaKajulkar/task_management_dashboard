@@ -1,20 +1,35 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 def add_task(task_name, status, deadline):
-    priority = "High" if deadline < datetime.today().date() else "Medium"
+    # Calculate the number of days until the deadline
+    days_until_deadline = (deadline - datetime.today().date()).days
+    
+    # Determine priority based on the deadline
+    if days_until_deadline <= 3:
+        priority = "High"
+    elif days_until_deadline <= 7:
+        priority = "Medium"
+    else:
+        priority = "Low"
+    
+    # Create the task dictionary
     task = {
         'task_name': task_name,
-        'priority': priority,
+        'priority': priority,  # Set calculated priority
         'status': status,
         'deadline': deadline,
         'created_on': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
+    
+    # Add task to session state
+    if 'tasks' not in st.session_state:
+        st.session_state['tasks'] = []  # Initialize tasks if not already present
     st.session_state.tasks.append(task)
-    st.success(f'Task "{task_name}" added successfully.')
+    st.success(f'Task "{task_name}" added successfully with priority "{priority}".')
 
 def mark_as_completed(task_name):
     for task in st.session_state.tasks:
@@ -30,7 +45,6 @@ def show_tasks():
 
         st.write('<div class="section-heading">Current Tasks</div>', unsafe_allow_html=True)
         st.dataframe(task_df, width=1200)
-
     
     else:
         st.write("No tasks added yet.")
@@ -56,16 +70,22 @@ def show_task_progress():
     else:
         st.write("No tasks to display progress.")
 
-# Function to edit tasks (name, status, deadline, etc.)
 def edit_task(task_name, new_name, new_status, new_deadline):
     for task in st.session_state.tasks:
         if task['task_name'] == task_name:
             task['task_name'] = new_name
             task['status'] = new_status
             task['deadline'] = new_deadline
-            st.success(f'Task "{task_name}" has been updated to "{new_name}".')
+            # Recalculate the priority based on the new deadline
+            days_until_deadline = (new_deadline - datetime.today().date()).days
+            if days_until_deadline <= 3:
+                task['priority'] = "High"
+            elif days_until_deadline <= 7:
+                task['priority'] = "Medium"
+            else:
+                task['priority'] = "Low"
+            st.success(f'Task "{task_name}" has been updated to "{new_name}" with priority "{task["priority"]}".')
 
-# Function to manage tasks (mark as completed or edit)
 def manage_task():
     st.write('<div class="section-heading">Manage Task</div>', unsafe_allow_html=True)
     
