@@ -7,7 +7,7 @@ from config.css import custom_css
 from utils.task_functions import add_task, mark_as_completed, show_tasks, show_task_progress, manage_task  # Import manage_task function
 
 # Set the page configuration
-st.set_page_config(page_title="Task Management Dashboard", page_icon="✅", layout="wide")
+st.set_page_config(page_title="Task Management", page_icon="✅", layout="wide")
 
 # Apply custom CSS
 st.markdown(custom_css, unsafe_allow_html=True)
