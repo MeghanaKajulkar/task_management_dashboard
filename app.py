@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime
 from config.css import custom_css
-from utils.task_functions import add_task, mark_as_completed, show_tasks, show_task_progress
+from utils.task_functions import add_task, mark_as_completed, show_tasks, show_task_progress, manage_task  # Import manage_task function
 
 # Set the page configuration
 st.set_page_config(page_title="Task Management Dashboard", page_icon="✅", layout="wide")
@@ -27,9 +27,8 @@ if st.sidebar.button("View Tasks"):
     st.session_state.page = "view_tasks"
 if st.sidebar.button("Task Progress"):
     st.session_state.page = "task_progress"
-if st.sidebar.button("Clear Tasks"):
-    st.session_state.tasks = []
-    st.success("All tasks have been cleared.")
+if st.sidebar.button("Manage Task"):  # Add back "Manage Task"
+    st.session_state.page = "manage_task"  # Switch to the "manage_task" page
 
 # Page Content
 if st.session_state.page == "add_task":
@@ -48,3 +47,6 @@ elif st.session_state.page == "view_tasks":
 
 elif st.session_state.page == "task_progress":
     show_task_progress()
+
+elif st.session_state.page == "manage_task":  # Add logic for "Manage Task" page
+    manage_task()  # Call the function to manage tasks
