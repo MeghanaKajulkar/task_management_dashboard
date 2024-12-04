@@ -1,23 +1,24 @@
 import pytest
-import streamlit as st
 from datetime import datetime
-from utils.task_functions import add_task
+import streamlit as st
+from utils.task_functions import add_task, mark_as_completed, show_tasks
 
-def test_add_task():
+def test_add_and_mark_task_completed():
     # Mock session_state
     st.session_state.tasks = []
 
-    # Input data
+    # Add a task
     task_name = "Test Task"
     status = "Not Started"
-    # Pass deadline as a datetime.date object
     deadline = datetime(2024, 12, 15).date()
 
-    # Call the function to add the task
+    # Add the task using add_task function
     add_task(task_name, status, deadline)
 
-    # Check if the task was added
-    assert len(st.session_state.tasks) == 1
-    assert st.session_state.tasks[0]["task_name"] == task_name
-    assert st.session_state.tasks[0]["status"] == status
-    assert st.session_state.tasks[0]["deadline"] == deadline
+    # Now, mark the task as completed using the mark_as_completed function
+    mark_as_completed(task_name)
+
+    # Check if the task's status has been updated to "Completed"
+    assert len(st.session_state.tasks) == 1  # Task should still be in session_state
+    assert st.session_state.tasks[0]["status"] == "Completed"  # The status should be updated to "Completed"
+    assert st.session_state.tasks[0]["task_name"] == task_name  # The task name should remain the same
