@@ -10,7 +10,7 @@ def add_task(task_name, status, deadline):
     
     # Determine priority based on the deadline
     if days_until_deadline <= 3:
-        priority = "High"
+        priority = "Medium"
     elif days_until_deadline <= 7:
         priority = "Medium"
     else:
