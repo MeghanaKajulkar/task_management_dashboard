@@ -1,13 +1,20 @@
-import requests
+import pytest
+import streamlit as st
+from utils.task_functions import add_task, show_tasks
 
-def test_streamlit_app():
-    url = "http://localhost:8501"
-    
-    # Make a GET request to the Streamlit app
-    response = requests.get(url)
+def test_add_and_view_task():
+    # Mock session_state
+    st.session_state.tasks = []
 
-    # Check if the response is successful (status code 200)
-    assert response.status_code == 200, f"Expected 200 OK, but got {response.status_code}"
+    # Add a task
+    task_name = "Test Task"
+    add_task(task_name, "Not Started", "2024-12-15")
 
-    # Check if the content contains specific text or element
-    assert "Streamlit" in response.text, "Streamlit page did not load correctly"
+    # Verify task is added
+    assert len(st.session_state.tasks) == 1
+    assert st.session_state.tasks[0]["task_name"] == task_name
+
+    # Simulate viewing tasks (just check if any task exists)
+    show_tasks()
+    assert "Test Task" in [task["task_name"] for task in st.session_state.tasks]
+
